@@ -1,0 +1,17 @@
+{
+  "apps": [
+    {
+      "id": "sample-1",
+      "name": "Your App Name",
+      "developer": "Farouk Nasser",
+      "category": "Utilities",
+      "downloads": 0,
+      "rating": 0,
+      "version": "1.0",
+      "status": "active",
+      "description": "Replace this placeholder by running the GitHub Action to fetch your real apps from App Store Connect.",
+      "icon": "assets/img/app-placeholder.png",
+      "storeUrl": "#"
+    }
+  ]
+}
