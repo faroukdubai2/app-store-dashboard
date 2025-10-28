@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Store Dashboard</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Boxicons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h4><i class="bx bx-mobile-alt"></i> App Store Dashboard</h4>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li class="nav-item active">
+                <a href="#" class="nav-link" data-section="dashboard">
+                    <i class="bx bx-grid-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-section="apps">
+                    <i class="bx bx-mobile"></i>
+                    <span>My Apps</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-section="analytics">
+                    <i class="bx bx-bar-chart-alt-2"></i>
+                    <span>Analytics</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-section="downloads">
+                    <i class="bx bx-download"></i>
+                    <span>Downloads</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-section="reviews">
+                    <i class="bx bx-star"></i>
+                    <span>Reviews</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-section="settings">
+                    <i class="bx bx-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="btn btn-link sidebar-toggle" id="sidebarToggle">
+                    <i class="bx bx-menu"></i>
+                </button>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page" id="currentPage">Dashboard</li>
+                    </ol>
+                </nav>
+            </div>
+            
+            <div class="header-right">
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bx bx-user-circle"></i>
+                        <span>Farouk Nasser</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#"><i class="bx bx-user"></i> Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bx bx-cog"></i> Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="bx bx-log-out"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="content-section active">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="page-title">Dashboard Overview</h1>
+                        <p class="text-muted mb-4">Monitor your iOS apps performance across both Apple Developer accounts</p>
+                    </div>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stats-card">
+                            <div class="stats-icon bg-primary">
+                                <i class="bx bx-mobile-alt"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h3 id="totalApps">--</h3>
+                                <p>Total Apps</p>
+                                <div class="progress">
+                                    <div class="progress-bar bg-primary" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stats-card">
+                            <div class="stats-icon bg-success">
+                                <i class="bx bx-download"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h3 id="totalDownloads">--</h3>
+                                <p>Total Downloads</p>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stats-card">
+                            <div class="stats-icon bg-warning">
+                                <i class="bx bx-star"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h3 id="avgRating">--</h3>
+                                <p>Average Rating</p>
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning" style="width: 92%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stats-card">
+                            <div class="stats-icon bg-info">
+                                <i class="bx bx-trending-up"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h3 id="monthlyGrowth">--</h3>
+                                <p>Monthly Growth</p>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" style="width: 78%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Apps -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Recent Apps Activity</h5>
+                                <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>App Name</th>
+                                                <th>Category</th>
+                                                <th>Downloads</th>
+                                                <th>Rating</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentAppsTable">
+                                            <tr>
+                                                <td colspan="6" class="text-center py-4">
+                                                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                    <span class="ms-2">Loading apps data...</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apps Section -->
+            <div id="apps-section" class="content-section">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="page-title">My Apps</h1>
+                        <p class="text-muted mb-4">Manage all your iOS applications from both developer accounts</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bx bx-search"></i></span>
+                            <input type="text" class="form-control" placeholder="Search apps..." id="appSearch">
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary active" data-filter="all">All Apps</button>
+                            <button type="button" class="btn btn-outline-secondary" data-filter="farouk-nasser">Farouk Nasser</button>
+                            <button type="button" class="btn btn-outline-secondary" data-filter="farouk-elsayed">Farouk Elsayed</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>App Icon</th>
+                                        <th>App Name</th>
+                                        <th>Developer</th>
+                                        <th>Category</th>
+                                        <th>Downloads</th>
+                                        <th>Rating</th>
+                                        <th>Version</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="appsTable">
+                                    <tr>
+                                        <td colspan="9" class="text-center py-4">
+                                            <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                            <span class="ms-2">Loading apps data...</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pagination -->
+                <nav aria-label="Apps pagination" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bx bx-check"></i> Action completed successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for App Details -->
+    <div class="modal fade" id="appDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">App Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <img id="modalAppIcon" src="" alt="App Icon" class="img-fluid rounded mb-3" style="max-width: 120px;">
+                            <h5 id="modalAppName"></h5>
+                            <p class="text-muted" id="modalDeveloper"></p>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <strong>Category:</strong>
+                                    <p id="modalCategory"></p>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Downloads:</strong>
+                                    <p id="modalDownloads"></p>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Rating:</strong>
+                                    <p id="modalRating"></p>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Version:</strong>
+                                    <p id="modalVersion"></p>
+                                </div>
+                                <div class="col-12">
+                                    <strong>Description:</strong>
+                                    <p id="modalDescription"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">View on App Store</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
