@@ -1,0 +1,126 @@
+name: Fetch App Store Apps
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 3 * * *' # daily at 03:15 UTC
+
+jobs:
+  fetch-apps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        run: |
+          npm init -y
+          npm install node-fetch@3 jose
+
+      - name: Create fetch script
+        run: |
+          mkdir -p scripts data
+          cat > scripts/fetch-apps.mjs <<'EOF'
+          import fs from 'fs/promises'
+          import fetch from 'node-fetch'
+          import { SignJWT, importPKCS8 } from 'jose'
+
+          async function makeToken(keyId, issuerId, privateKeyPem){
+            const alg = 'ES256'
+            const key = await importPKCS8(privateKeyPem, alg)
+            const jwt = await new SignJWT({})
+              .setProtectedHeader({ alg, kid: keyId, typ:'JWT' })
+              .setIssuedAt()
+              .setExpirationTime('15m')
+              .setIssuer(issuerId)
+              .setAudience('appstoreconnect-v1')
+              .sign(key)
+            return jwt
+          }
+
+          async function ascRequest(path, token){
+            const url = `https://api.appstoreconnect.apple.com/v1/${path}`
+            const res = await fetch(url, { headers:{ Authorization: `Bearer ${token}` } })
+            if(!res.ok){
+              const text = await res.text()
+              throw new Error(`ASC error ${res.status}: ${text}`)
+            }
+            return res.json()
+          }
+
+          function mapApp(a){
+            return {
+              id: a.id,
+              name: a.attributes?.name,
+              developer: a.attributes?.vendorName,
+              category: a.attributes?.primaryCategory || '—',
+              downloads: 0,
+              rating: 0,
+              version: a.attributes?.bundleId,
+              status: a.attributes?.isOrEverWasMadeForKids ? 'active' : 'active',
+              description: a.attributes?.name,
+              icon: 'assets/img/app-placeholder.png',
+              storeUrl: `https://apps.apple.com/app/id${a.attributes?.adamId || ''}`
+            }
+          }
+
+          async function main(){
+            const keyId = process.env.ASC_KEY_ID
+            const issuerId = process.env.ASC_ISSUER_ID
+            const privateKey = process.env.ASC_PRIVATE_KEY?.replace(/\\n/g,'\n')
+
+            if(!keyId || !issuerId || !privateKey){
+              console.log('Missing ASC envs, writing placeholder file')
+              await fs.writeFile('data/apps.json', JSON.stringify({ apps: [] }, null, 2))
+              return
+            }
+
+            const token = await makeToken(keyId, issuerId, privateKey)
+            // List apps from both accounts: use two runs if two keys provided
+            const accounts = [{
+              name:'Account A', keyId, issuerId, privateKey
+            }]
+
+            let allApps = []
+            for(const acc of accounts){
+              const t = token
+              // Fetch apps (pagination)
+              let next = 'apps?limit=200'
+              while(next){
+                const json = await ascRequest(next, t)
+                allApps.push(...(json.data||[]))
+                next = json.links?.next?.replace('https://api.appstoreconnect.apple.com/v1/','')
+              }
+            }
+
+            const mapped = allApps.map(mapApp)
+            const result = { apps: mapped }
+            await fs.mkdir('data', {recursive:true})
+            await fs.writeFile('data/apps.json', JSON.stringify(result, null, 2))
+            console.log(`Wrote ${mapped.length} apps`)
+          }
+
+          main().catch(err=>{ console.error(err); process.exit(1) })
+          EOF
+
+      - name: Run fetch script
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: node scripts/fetch-apps.mjs
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/apps.json
+          git commit -m "chore: update apps list"
+          git push
